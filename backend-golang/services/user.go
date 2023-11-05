@@ -28,14 +28,14 @@ func NewUserService(
 }
 
 type CreateUserRequest struct {
-	Username             string `json:"username" binding:"required"`
+	Email                string `json:"email" binding:"required"`
 	Password             string `json:"password" binding:"required"`
 	PasswordConfirmation string `json:"password_confirmation" binding:"required"`
 }
 
 type UserResponse struct {
 	Id        string     `json:"id"`
-	Username  string     `json:"username"`
+	Email     string     `json:"email"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"deleted_at"`
@@ -44,7 +44,7 @@ type UserResponse struct {
 func modelToResponse(user *models.User) *UserResponse {
 	return &UserResponse{
 		Id:        user.Id,
-		Username:  user.Username,
+		Email:     user.Email,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 		DeletedAt: user.DeletedAt,
@@ -65,7 +65,7 @@ func (us *UserService) CreateUser(data *CreateUserRequest) (*UserResponse, error
 	now := time.Now().UTC()
 	user := &models.User{
 		Id:        uuid.NewString(),
-		Username:  strings.TrimSpace(data.Username),
+		Email:     strings.TrimSpace(data.Email),
 		Password:  passwordHash,
 		CreatedAt: now,
 		UpdatedAt: now,
@@ -77,29 +77,29 @@ func (us *UserService) CreateUser(data *CreateUserRequest) (*UserResponse, error
 		return nil, err
 	}
 
-	userFromRedis, err := us.userRepositoryRedis.GetUserByUsername(data.Username)
+	userFromRedis, err := us.userRepositoryRedis.GetUserByEmail(data.Email)
 	if err != nil {
-		us.logger.Log(fmt.Sprintf("problem on get user by username: %v - error => %s", user.Username, err))
+		us.logger.Log(fmt.Sprintf("problem on get user by email: %v - error => %s", user.Email, err))
 		return nil, err
 	}
 	if userFromRedis != nil {
-		us.logger.Log(fmt.Sprintf("user already exists by username: %v - error => %s", user.Username, err))
-		return nil, errors.New("user already exists by username")
+		us.logger.Log(fmt.Sprintf("user already exists by email: %v - error => %s", user.Email, err))
+		return nil, errors.New("user already exists by email")
 	}
 
-	userFromPg, err := us.userRepositoryPostgres.GetUserByUsername(data.Username)
+	userFromPg, err := us.userRepositoryPostgres.GetUserByEmail(data.Email)
 	if err != nil {
-		us.logger.Log(fmt.Sprintf("problem on get user by username: %v - error => %s", user.Username, err))
+		us.logger.Log(fmt.Sprintf("problem on get user by email: %v - error => %s", user.Email, err))
 		return nil, err
 	}
 	if userFromPg != nil {
 		err := us.userRepositoryRedis.InsertUser(userFromPg)
 		if err != nil {
-			us.logger.Log(fmt.Sprintf("problem on insert user redis cache: %v - error => %s", user.Username, err))
+			us.logger.Log(fmt.Sprintf("problem on insert user redis cache: %v - error => %s", user.Email, err))
 			return nil, err
 		}
-		us.logger.Log(fmt.Sprintf("user already exists by username: %v - error => %s", user.Username, err))
-		return nil, errors.New("user already exists by username")
+		us.logger.Log(fmt.Sprintf("user already exists by email: %v - error => %s", user.Email, err))
+		return nil, errors.New("user already exists by email")
 	}
 
 	err = us.userRepositoryPostgres.InsertUser(user)
@@ -135,26 +135,26 @@ func (us *UserService) GetUserById(id string) (*UserResponse, error) {
 	return modelToResponse(user), nil
 }
 
-func (us *UserService) GetUserByUsername(username string) (*UserResponse, error) {
-	userFromRedis, err := us.userRepositoryRedis.GetUserByUsername(username)
+func (us *UserService) GetUserByEmail(email string) (*UserResponse, error) {
+	userFromRedis, err := us.userRepositoryRedis.GetUserByEmail(email)
 	if err != nil {
-		us.logger.Log(fmt.Sprintf("problem on get user by username from redis: %v - error => %s", username, err))
-		return nil, errors.New("problem on get user by username")
+		us.logger.Log(fmt.Sprintf("problem on get user by email from redis: %v - error => %s", email, err))
+		return nil, errors.New("problem on get user by email")
 	}
 	if userFromRedis != nil {
 		return modelToResponse(userFromRedis), nil
 	}
 
-	userFromPg, err := us.userRepositoryPostgres.GetUserByUsername(username)
+	userFromPg, err := us.userRepositoryPostgres.GetUserByEmail(email)
 	if err != nil {
-		us.logger.Log(fmt.Sprintf("problem on get user by username from postgres: %v - error => %s", username, err))
-		return nil, errors.New("problem on get user by username")
+		us.logger.Log(fmt.Sprintf("problem on get user by email from postgres: %v - error => %s", email, err))
+		return nil, errors.New("problem on get user by email")
 	}
 
 	err = us.userRepositoryRedis.InsertUser(userFromPg)
 	if err != nil {
-		us.logger.Log(fmt.Sprintf("problem on insert user by username on redis: %v - error => %s", username, err))
-		return nil, errors.New("problem on get user by username")
+		us.logger.Log(fmt.Sprintf("problem on insert user by email on redis: %v - error => %s", email, err))
+		return nil, errors.New("problem on get user by email")
 	}
 
 	return modelToResponse(userFromPg), nil

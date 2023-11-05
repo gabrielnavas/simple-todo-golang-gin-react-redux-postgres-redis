@@ -28,7 +28,7 @@ func NewUserRepositoryRedis(rdb *redis.Client, expirationTime time.Duration) *Us
 
 func (urr *UserRepositoryRedis) InsertUser(user *models.User) error {
 	userKeyId := fmt.Sprintf("%s%s", USER_KEY_ID, user.Id)
-	userKeyUsername := fmt.Sprintf("%s%s", USER_KEY_NAME, user.Username)
+	userKeyEmail := fmt.Sprintf("%s%s", USER_KEY_NAME, user.Email)
 
 	value, err := json.Marshal(user)
 	if err != nil {
@@ -40,7 +40,7 @@ func (urr *UserRepositoryRedis) InsertUser(user *models.User) error {
 		return err
 	}
 
-	err = urr.rdb.Set(ctx, userKeyUsername, string(value), 0).Err()
+	err = urr.rdb.Set(ctx, userKeyEmail, string(value), 0).Err()
 	if err != nil {
 		return err
 	}
@@ -53,9 +53,9 @@ func (urr *UserRepositoryRedis) GetUserByID(id string) (*models.User, error) {
 	return urr.getByKey(userKeyId)
 }
 
-func (urr *UserRepositoryRedis) GetUserByUsername(username string) (*models.User, error) {
-	userKeyUsername := fmt.Sprintf("%s%s", USER_KEY_NAME, username)
-	return urr.getByKey(userKeyUsername)
+func (urr *UserRepositoryRedis) GetUserByEmail(email string) (*models.User, error) {
+	userKeyEmail := fmt.Sprintf("%s%s", USER_KEY_NAME, email)
+	return urr.getByKey(userKeyEmail)
 }
 
 func (urr *UserRepositoryRedis) getByKey(key string) (*models.User, error) {

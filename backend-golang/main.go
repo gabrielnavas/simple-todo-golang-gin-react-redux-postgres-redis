@@ -47,7 +47,7 @@ func main() {
 
 	public := r.Group("/api")
 
-	public.POST("/register", userController.RegisterUser)
+	public.POST("/register", authController.RegisterUser)
 	public.POST("/login", authController.Login)
 
 	protected := r.Group("/api/admin")
@@ -58,16 +58,18 @@ func main() {
 	r.Run(":8080")
 }
 
-func makeAuthController(db *sql.DB, secret, hoursExpToken string, redisDb *redis.Client, redisTimeDuration string) *controllers.AuthenticationController {
+func makeAuthController(postgreSqlDb *sql.DB, secret, hoursExpToken string, redisDb *redis.Client, redisTimeDuration string) *controllers.AuthenticationController {
 	redisTimeDurationInt, _ := strconv.Atoi(redisTimeDuration)
 	hoursExpTokenInt, _ := strconv.Atoi(hoursExpToken)
 	loggerService := services.NewLoggerService()
-	userRepository := repositories.NewUserRepositoryPostgres(db)
+	userRepository := repositories.NewUserRepositoryPostgres(postgreSqlDb)
 	userRepositoryRedis := repositories.NewUserRepositoryRedis(redisDb, time.Duration(redisTimeDurationInt))
 	encryptPasswordService := services.NewEncryptPasswordService(loggerService)
 	tokenJWTService := services.NewTokenJWTService(secret, hoursExpTokenInt)
+	userRepositoryPostgres := repositories.NewUserRepositoryPostgres(postgreSqlDb)
 	authenticationService := services.NewAuthenticationService(userRepository, userRepositoryRedis, loggerService, encryptPasswordService, tokenJWTService)
-	return controllers.NewAuthenticationController(authenticationService)
+	userService := services.NewUserService(userRepositoryPostgres, userRepositoryRedis, loggerService, encryptPasswordService)
+	return controllers.NewAuthenticationController(authenticationService, userService)
 }
 
 func makeUserController(postgreSqlDb *sql.DB, redisDb *redis.Client, redisTimeDuration string) *controllers.UserController {
@@ -76,8 +78,8 @@ func makeUserController(postgreSqlDb *sql.DB, redisDb *redis.Client, redisTimeDu
 	userRepositoryPostgres := repositories.NewUserRepositoryPostgres(postgreSqlDb)
 	userRepositoryRedis := repositories.NewUserRepositoryRedis(redisDb, time.Duration(redisTimeDurationInt))
 	encryptPasswordService := services.NewEncryptPasswordService(loggerService)
-	authenticationService := services.NewUserService(userRepositoryPostgres, userRepositoryRedis, loggerService, encryptPasswordService)
-	return controllers.NewUserController(authenticationService, loggerService)
+	userService := services.NewUserService(userRepositoryPostgres, userRepositoryRedis, loggerService, encryptPasswordService)
+	return controllers.NewUserController(userService, loggerService)
 }
 
 func makeMiddlewareAuthenticationJwt(secret, hoursExpToken string) *middlewares.AuthenticationJwt {

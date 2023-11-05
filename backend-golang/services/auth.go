@@ -32,32 +32,32 @@ func NewAuthenticationService(
 }
 
 type LoginRequest struct {
-	Username string `json:"username" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
 func (as *AuthenticationService) Login(data LoginRequest) (string, error) {
 	var user *models.User = nil
 
-	user, err := as.userRepositoryRedis.GetUserByUsername(data.Username)
+	user, err := as.userRepositoryRedis.GetUserByEmail(data.Email)
 	if err != nil {
-		as.logger.Log(fmt.Sprintf("problem on get user by username: %v - error => %s", data.Username, err))
-		return "", errors.New("problem on get user by username")
+		as.logger.Log(fmt.Sprintf("problem on get user by email: %v - error => %s", data.Email, err))
+		return "", errors.New("problem on get user by email")
 	}
 	if user == nil {
-		user, err = as.userRepositoryPostgres.GetUserByUsername(data.Username)
+		user, err = as.userRepositoryPostgres.GetUserByEmail(data.Email)
 		if err != nil {
-			as.logger.Log(fmt.Sprintf("problem on get user by username: %v - error => %s", data.Username, err))
-			return "", errors.New("problem on get user by username")
+			as.logger.Log(fmt.Sprintf("problem on get user by email: %v - error => %s", data.Email, err))
+			return "", errors.New("problem on get user by email")
 		}
 		if user == nil {
 			as.logger.Log("user not found on login")
-			return "", errors.New("username/password is not equals")
+			return "", errors.New("email/password is not equals")
 		}
 	}
 
 	if !as.encryptPassword.VerifyPassword(user.Password, data.Password) {
-		return "", errors.New("username/password is not equals")
+		return "", errors.New("email/password is not equals")
 	}
 
 	tokenJWT, err := as.tokenJWT.GenerateToken(user)

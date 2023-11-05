@@ -1,11 +1,11 @@
 CREATE TABLE public.users (
 	id uuid NOT NULL,
-	username varchar(255) NOT NULL,
+	email varchar(255) NOT NULL,
 	password varchar(255) NOT NULL,
 	created_at timestamp with time zone NOT NULL,
 	updated_at timestamptz NOT NULL,
 	deleted_at timestamptz,
-	CONSTRAINT users_unique_username UNIQUE (username),
+	CONSTRAINT users_unique_username UNIQUE (email),
 	CONSTRAINT users_pk PRIMARY KEY (id)
 );
 

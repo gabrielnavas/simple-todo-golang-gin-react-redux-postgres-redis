@@ -18,23 +18,6 @@ func NewUserController(userService *services.UserService, loggerService *service
 	return &UserController{userService, loggerService}
 }
 
-func (uc *UserController) RegisterUser(c *gin.Context) {
-	var data services.CreateUserRequest
-
-	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	user, err := uc.userService.CreateUser(&data)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"details": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{"user": user})
-}
-
 func (uc *UserController) CurrentUser(c *gin.Context) {
 	userId, _ := c.Get(middlewares.USER_ID)
 	user, err := uc.userService.GetUserById(userId.(string))
