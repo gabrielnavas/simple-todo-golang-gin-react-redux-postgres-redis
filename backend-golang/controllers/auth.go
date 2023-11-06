@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/models"
 	"backend/services"
 	"net/http"
 
@@ -36,7 +37,7 @@ func (ac *AuthenticationController) Login(c *gin.Context) {
 }
 
 func (ac *AuthenticationController) RegisterUser(c *gin.Context) {
-	var data services.CreateUserRequest
+	var data models.UserRequest
 
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

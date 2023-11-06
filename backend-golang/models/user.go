@@ -43,3 +43,27 @@ func (u *User) Validate() error {
 
 	return nil
 }
+
+type UserRequest struct {
+	Email                string `json:"email" binding:"required"`
+	Password             string `json:"password" binding:"required"`
+	PasswordConfirmation string `json:"password_confirmation" binding:"required"`
+}
+
+type UserResponse struct {
+	Id        string     `json:"id"`
+	Email     string     `json:"email"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at"`
+}
+
+func (u *User) ToResponse() *UserResponse {
+	return &UserResponse{
+		Id:        u.Id,
+		Email:     u.Email,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+		DeletedAt: u.DeletedAt,
+	}
+}

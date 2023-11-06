@@ -27,31 +27,7 @@ func NewUserService(
 	return &UserService{userRepositoryPostgres, userRepositoryRedis, logger, encryptPassword}
 }
 
-type CreateUserRequest struct {
-	Email                string `json:"email" binding:"required"`
-	Password             string `json:"password" binding:"required"`
-	PasswordConfirmation string `json:"password_confirmation" binding:"required"`
-}
-
-type UserResponse struct {
-	Id        string     `json:"id"`
-	Email     string     `json:"email"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `json:"deleted_at"`
-}
-
-func modelToResponse(user *models.User) *UserResponse {
-	return &UserResponse{
-		Id:        user.Id,
-		Email:     user.Email,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-		DeletedAt: user.DeletedAt,
-	}
-}
-
-func (us *UserService) CreateUser(data *CreateUserRequest) (*UserResponse, error) {
+func (us *UserService) CreateUser(data *models.UserRequest) (*models.UserResponse, error) {
 	if data.Password != data.PasswordConfirmation {
 		return nil, errors.New("password is different from password confirmation")
 	}
@@ -107,17 +83,17 @@ func (us *UserService) CreateUser(data *CreateUserRequest) (*UserResponse, error
 		us.logger.Log(fmt.Sprintf("problem on insert user postgres: %v - error => %s", user, err))
 		return nil, errors.New("problem on insert user")
 	}
-	return modelToResponse(user), nil
+	return user.ToResponse(), nil
 }
 
-func (us *UserService) GetUserById(id string) (*UserResponse, error) {
+func (us *UserService) GetUserById(id string) (*models.UserResponse, error) {
 	user, err := us.userRepositoryRedis.GetUserByID(id)
 	if err != nil {
 		us.logger.Log(fmt.Sprintf("problem on get user by id from redis: %v - error => %s", id, err))
 		return nil, errors.New("problem on get user by id")
 	}
 	if user != nil {
-		return modelToResponse(user), nil
+		return user.ToResponse(), nil
 	}
 
 	user, err = us.userRepositoryPostgres.GetUserByID(id)
@@ -132,17 +108,17 @@ func (us *UserService) GetUserById(id string) (*UserResponse, error) {
 		return nil, errors.New("problem on get user by id")
 	}
 
-	return modelToResponse(user), nil
+	return user.ToResponse(), nil
 }
 
-func (us *UserService) GetUserByEmail(email string) (*UserResponse, error) {
+func (us *UserService) GetUserByEmail(email string) (*models.UserResponse, error) {
 	userFromRedis, err := us.userRepositoryRedis.GetUserByEmail(email)
 	if err != nil {
 		us.logger.Log(fmt.Sprintf("problem on get user by email from redis: %v - error => %s", email, err))
 		return nil, errors.New("problem on get user by email")
 	}
 	if userFromRedis != nil {
-		return modelToResponse(userFromRedis), nil
+		return userFromRedis.ToResponse(), nil
 	}
 
 	userFromPg, err := us.userRepositoryPostgres.GetUserByEmail(email)
@@ -157,5 +133,5 @@ func (us *UserService) GetUserByEmail(email string) (*UserResponse, error) {
 		return nil, errors.New("problem on get user by email")
 	}
 
-	return modelToResponse(userFromPg), nil
+	return userFromPg.ToResponse(), nil
 }

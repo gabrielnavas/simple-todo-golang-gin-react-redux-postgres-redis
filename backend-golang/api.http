@@ -1,0 +1,68 @@
+// Register user
+POST http://localhost:8080/api/register HTTP/1.1
+Content-Type: application/json
+Accept: : application/json
+
+{
+  "email": "navas@email.com",
+  "password": "12345678",
+  "password_confirmation": "12345678"
+}
+
+###
+// Login
+POST http://localhost:8080/api/login HTTP/1.1
+Content-Type: application/json
+Accept: : application/json
+
+{
+  "email": "navas@email.com",
+  "password": "12345678"
+}
+
+###
+// Get Current User Authenticated On JWT Token
+GET http://localhost:8080/api/admin/user HTTP/1.1
+Content-Type: application/json
+Accept: : application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTkzMjA1NzMsInN1YiI6IjViMTc5YzU3LTJiOGEtNGMxNC04NGE3LWI4YTQ5MTZiMTBkNSJ9.7t8GGH2rdugpY01nBum_mO6sbc6zNJ2kljtrrwMUCiE
+
+###
+// Create Task
+POST http://localhost:8080/api/task HTTP/1.1
+Content-Type: application/json
+Accept: : application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTkzMjA1NzMsInN1YiI6IjViMTc5YzU3LTJiOGEtNGMxNC04NGE3LWI4YTQ5MTZiMTBkNSJ9.7t8GGH2rdugpY01nBum_mO6sbc6zNJ2kljtrrwMUCiE
+
+{
+  "description": "Testing the task #1",
+  "ownerId": "5b179c57-2b8a-4c14-84a7-b8a4916b10d5"
+}
+
+###
+// Get All Tasks By User Id
+GET http://localhost:8080/api/task?userId=5b179c57-2b8a-4c14-84a7-b8a4916b10d5 HTTP/1.1
+Accept: : application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTkzMjA1NzMsInN1YiI6IjViMTc5YzU3LTJiOGEtNGMxNC04NGE3LWI4YTQ5MTZiMTBkNSJ9.7t8GGH2rdugpY01nBum_mO6sbc6zNJ2kljtrrwMUCiE
+
+###
+// Get Task By Id and By User Id
+GET http://localhost:8080/api/task/c977a480-dfdf-48ff-8153-9ebbd63024d1?userId=5b179c57-2b8a-4c14-84a7-b8a4916b10d5 HTTP/1.1
+Accept: : application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTkzMjA1NzMsInN1YiI6IjViMTc5YzU3LTJiOGEtNGMxNC04NGE3LWI4YTQ5MTZiMTBkNSJ9.7t8GGH2rdugpY01nBum_mO6sbc6zNJ2kljtrrwMUCiE
+
+###
+// Update Partials Task By Id and By User Id
+PATCH http://localhost:8080/api/task/c977a480-dfdf-48ff-8153-9ebbd63024d1?userId=5b179c57-2b8a-4c14-84a7-b8a4916b10d5 HTTP/1.1
+Accept: : application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTkzMjA1NzMsInN1YiI6IjViMTc5YzU3LTJiOGEtNGMxNC04NGE3LWI4YTQ5MTZiMTBkNSJ9.7t8GGH2rdugpY01nBum_mO6sbc6zNJ2kljtrrwMUCiE
+
+{
+  "description": "Testing the task #1"
+}
+
+###
+// Update Partials Task By Id and By User Id
+DELETE http://localhost:8080/api/task/c977a480-dfdf-48ff-8153-9ebbd63024d1?userId=5b179c57-2b8a-4c14-84a7-b8a4916b10d5 HTTP/1.1
+Accept: : application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTkzMjA1NzMsInN1YiI6IjViMTc5YzU3LTJiOGEtNGMxNC04NGE3LWI4YTQ5MTZiMTBkNSJ9.7t8GGH2rdugpY01nBum_mO6sbc6zNJ2kljtrrwMUCiE

@@ -9,9 +9,8 @@ CREATE TABLE public.users (
 	CONSTRAINT users_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE public.task (
+CREATE TABLE public.tasks (
 	id uuid NOT NULL,
-	name varchar(255) NOT NULL,
 	description varchar(500) NOT NULL,
 	created_at timestamptz NOT NULL,
 	updated_at timestamptz NOT NULL,

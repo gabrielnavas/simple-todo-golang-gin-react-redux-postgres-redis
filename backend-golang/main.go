@@ -37,10 +37,16 @@ func main() {
 		DB_REDIS_DURATION_CACHE = os.Getenv("DB_REDIS_DURATION_CACHE")
 	)
 
+	// databases
 	dbPostgreSql := repositories.MakePostgresConnection(DB_PG_HOST, DB_PG_USER, DB_PG_PASSWORD, DB_PG_NAME, DB_PG_PORT)
 	dbRedis := repositories.MakeRedisConnection(DB_REDIS_HOST, DB_REDIS_PORT, DB_REDIS_PASSWORD)
+
+	// controllers
 	authController := makeAuthController(dbPostgreSql, SECRET_JWT, HOURS_EXP_TOKEN, dbRedis, DB_REDIS_DURATION_CACHE)
 	userController := makeUserController(dbPostgreSql, dbRedis, DB_REDIS_DURATION_CACHE)
+	taskController := makeTaskController(dbPostgreSql)
+
+	// middlewwares
 	middlewareAuthJwt := makeMiddlewareAuthenticationJwt(SECRET_JWT, HOURS_EXP_TOKEN)
 
 	r := gin.Default()
@@ -50,10 +56,19 @@ func main() {
 	public.POST("/register", authController.RegisterUser)
 	public.POST("/login", authController.Login)
 
-	protected := r.Group("/api/admin")
-	protected.Use(middlewareAuthJwt.VerifyJwtAuthMiddleware())
-	protected.Use(middlewareAuthJwt.AddUserIdOnStoreFromTokenJwt())
-	protected.GET("/user", userController.CurrentUser)
+	userProtected := r.Group("/api/admin")
+	userProtected.Use(middlewareAuthJwt.VerifyJwtAuthMiddleware())
+	userProtected.Use(middlewareAuthJwt.AddUserIdOnStoreFromTokenJwt())
+	userProtected.GET("/user", userController.CurrentUser)
+
+	taskProtected := r.Group("/api")
+	taskProtected.Use(middlewareAuthJwt.VerifyJwtAuthMiddleware())
+	taskProtected.Use(middlewareAuthJwt.AddUserIdOnStoreFromTokenJwt())
+	taskProtected.POST("/task", taskController.CreateTask)
+	taskProtected.GET("/task", taskController.GetAllTasks)
+	taskProtected.GET("/task/:taskId", taskController.GetTask)
+	taskProtected.PATCH("/task/:taskId", taskController.UpdateTask)
+	taskProtected.DELETE("/task/:taskId", taskController.RemoveTask)
 
 	r.Run(":8080")
 }
@@ -87,4 +102,12 @@ func makeMiddlewareAuthenticationJwt(secret, hoursExpToken string) *middlewares.
 	tokenJWTService := services.NewTokenJWTService(secret, hoursExpTokenInt)
 	loggerService := services.NewLoggerService()
 	return middlewares.NewAuthenticationJwt(secret, loggerService, tokenJWTService)
+}
+
+func makeTaskController(db *sql.DB) *controllers.TaskController {
+	userRepositoryPostgres := repositories.NewUserRepositoryPostgres(db)
+	taskRepositoryPostgres := repositories.NewTaskRepositoryPostgres(db, userRepositoryPostgres)
+	loggerService := services.NewLoggerService()
+	taskService := services.NewTaskService(taskRepositoryPostgres, userRepositoryPostgres, loggerService)
+	return controllers.NewTaskController(taskService)
 }

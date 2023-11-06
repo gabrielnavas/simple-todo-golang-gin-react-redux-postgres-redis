@@ -46,15 +46,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="task" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
+<table name="tasks" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="820" y="200"/>
 	<column name="id" not-null="true">
 		<type name="uuid" length="0"/>
-	</column>
-	<column name="name" not-null="true">
-		<type name="varchar" length="255"/>
 	</column>
 	<column name="description" not-null="true">
 		<type name="varchar" length="500"/>
@@ -68,9 +65,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="deleted_at">
 		<type name="timestamptz" length="0"/>
 	</column>
-	<constraint name="task_pk" type="pk-constr" table="public.task">
+	<constraint name="task_pk" type="pk-constr" table="public.tasks">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="id_users" index="5"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="users_fk" index="1"/>
+	</customidxs>
 </table>
 
 <relationship name="users_has_many_task" type="rel1n" layers="0"
@@ -78,7 +83,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
 	 src-fk-pattern="{st}_fk"
 	 src-table="public.users"
-	 dst-table="public.task"
+	 dst-table="public.tasks"
 	 src-required="true" dst-required="false"/>
 
 </dbmodel>
