@@ -1,8 +1,8 @@
 export type TaskResponse = {
   id: string
   description: string
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 }
 
 export const getAllTasksByUser = async (userId: string, bearerToken: string): Promise<TaskResponse[] | Error> => {
@@ -23,8 +23,8 @@ export const getAllTasksByUser = async (userId: string, bearerToken: string): Pr
       .map((task: any) => ({
         id: task.id,
         description: task.description,
-        createdAt: new Date(task.createdAt),
-        updatedAt: new Date(task.createdAt),
+        createdAt: task.createdAt,
+        updatedAt: task.createdAt,
       } as TaskResponse))
     return tasks
   }

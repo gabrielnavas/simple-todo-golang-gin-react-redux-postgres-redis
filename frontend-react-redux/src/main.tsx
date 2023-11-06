@@ -11,7 +11,7 @@ import { RootState, store } from './store/store.ts'
 import './index.css'
 
 import { Login } from './login/login.tsx'
-import { FeedPage } from './feed/feed.tsx';
+import { FeedPage } from './feed/feed-page/feed-page.tsx';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
