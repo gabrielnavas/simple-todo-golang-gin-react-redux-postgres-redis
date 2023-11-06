@@ -28,7 +28,14 @@ func (trp *TaskRepositoryPostgres) InsertTask(task *models.Task) error {
 }
 
 func (trp *TaskRepositoryPostgres) GetAllTasksByUserId(userId string) ([]models.Task, error) {
-	selectAllSQL := "SELECT id, description, id_users, created_at, updated_at, deleted_at FROM tasks WHERE id_users=$1"
+	selectAllSQL := `
+		SELECT id, description, id_users, created_at, updated_at, deleted_at 
+		FROM tasks 
+		WHERE id_users=$1
+		ORDER BY 
+			created_at DESC, 
+			updated_at DESC
+	`
 	rows, err := trp.db.Query(selectAllSQL, userId)
 	if err != nil {
 		return nil, err
