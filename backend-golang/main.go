@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
@@ -51,6 +53,18 @@ func main() {
 
 	r := gin.Default()
 
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"*"},
+		AllowCredentials: true,
+		// AllowOriginFunc: func(origin string) bool {
+		// 	return origin == "https://github.com"
+		// },
+		MaxAge: 12 * time.Hour,
+	}))
+
 	public := r.Group("/api")
 
 	public.POST("/register", authController.RegisterUser)
@@ -59,16 +73,16 @@ func main() {
 	userProtected := r.Group("/api/admin")
 	userProtected.Use(middlewareAuthJwt.VerifyJwtAuthMiddleware())
 	userProtected.Use(middlewareAuthJwt.AddUserIdOnStoreFromTokenJwt())
-	userProtected.GET("/user", userController.CurrentUser)
+	userProtected.GET("/users", userController.CurrentUser)
 
 	taskProtected := r.Group("/api")
 	taskProtected.Use(middlewareAuthJwt.VerifyJwtAuthMiddleware())
 	taskProtected.Use(middlewareAuthJwt.AddUserIdOnStoreFromTokenJwt())
-	taskProtected.POST("/task", taskController.CreateTask)
-	taskProtected.GET("/task", taskController.GetAllTasks)
-	taskProtected.GET("/task/:taskId", taskController.GetTask)
-	taskProtected.PATCH("/task/:taskId", taskController.UpdateTask)
-	taskProtected.DELETE("/task/:taskId", taskController.RemoveTask)
+	taskProtected.POST("/tasks", taskController.CreateTask)
+	taskProtected.GET("/tasks", taskController.GetAllTasks)
+	taskProtected.GET("/tasks/:taskId", taskController.GetTask)
+	taskProtected.PATCH("/tasks/:taskId", taskController.UpdateTask)
+	taskProtected.DELETE("/tasks/:taskId", taskController.RemoveTask)
 
 	r.Run(":8080")
 }

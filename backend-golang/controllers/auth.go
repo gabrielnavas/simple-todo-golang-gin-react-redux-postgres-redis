@@ -28,12 +28,12 @@ func (ac *AuthenticationController) Login(c *gin.Context) {
 		return
 	}
 
-	tokenJWT, err := ac.authenticationService.Login(data)
+	loginResponse, err := ac.authenticationService.Login(data)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"details": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"token": tokenJWT})
+	c.JSON(http.StatusOK, loginResponse)
 }
 
 func (ac *AuthenticationController) RegisterUser(c *gin.Context) {
