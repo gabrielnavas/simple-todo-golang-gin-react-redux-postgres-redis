@@ -23,12 +23,22 @@ type Props = {
 }
 
 export const TaskItem = ({ taskData }: Props) => {
+
+  const showUpdatedAt = taskData.createdAt.toISOString() !== taskData.updatedAt.toISOString() 
+  && (
+    <ShowDate> 
+      Atualizado em {moment(taskData.updatedAt).format('DD/MM/YYYY, h:mm:ss a') }
+    </ShowDate>
+  )
+
   return (
     <Task>
       <TaskHeader>
         <TaskHeaderLeft>
-          <ShowDate> Criado em {moment(taskData.createdAt).format('DD/MM/YYYY, h:mm:ss a') }</ShowDate>
-          <ShowDate> Atualizado em {moment(taskData.updatedAt).format('DD/MM/YYYY, h:mm:ss a') }</ShowDate>
+          <ShowDate> 
+            Criado em {moment(taskData.createdAt).format('DD/MM/YYYY, h:mm:ss a') }
+          </ShowDate>
+          { showUpdatedAt }
         </TaskHeaderLeft>
         <TaskHeaderRight>
           <TaskItemMenu />
