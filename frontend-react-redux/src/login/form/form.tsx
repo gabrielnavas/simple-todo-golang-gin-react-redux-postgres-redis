@@ -1,3 +1,11 @@
+import { useFormik } from "formik";
+import { useDispatch } from 'react-redux';
+
+import { FormControlLabel } from '@mui/material';
+
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
 import {
   ActionsAfterButtons,
   ButtonAction,
@@ -6,16 +14,12 @@ import {
   Input,
   Inputs,
   RememberMe
-} from './components'
+} from './material-components'
 
-import { useFormik } from "formik";
+import { login } from '../../store/reducers/user/user';
+import { LoginResponse, serviceLogin } from '../service';
 import { validationSchema } from './validation-schema';
-import { FormControlLabel } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { login } from '../store/reducers/user/user';
-import { LoginResponse, serviceLogin } from './service';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+
 
 export const Form = () => {
   const dispatch = useDispatch()

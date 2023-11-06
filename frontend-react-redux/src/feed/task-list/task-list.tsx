@@ -16,18 +16,18 @@ export const TaskList = () => {
 
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    fetchTasks()
-  }, [])
-
   const fetchTasks =  useCallback(async () => {
-    const data = await getAllTasksByUser(userState.id, userState.token)
+    const data = await getAllTasksByUser(userState.user.id, userState.auth.token)
     if(data instanceof Error) {
       showMessageFromService(data)
     } else {
       dispatch(addTasks(data))
     }
-  }, [taskState.tasks, getAllTasksByUser])
+  }, [dispatch, userState.auth.token, userState.user.id])
+
+  useEffect(() => {
+    fetchTasks()
+  }, [fetchTasks])
 
   const showMessageFromService = (error: Error) => {
     toast(error.message)

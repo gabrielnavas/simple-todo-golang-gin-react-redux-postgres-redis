@@ -21,12 +21,6 @@ export const taskSlice = createSlice({
   initialState: {...initialState},
   reducers: {
     addTasks: (state, action: PayloadAction<Task[]>) => {
-      // const newTasks: Task[] = [] 
-      // for (let task of action.payload) {
-      //   if (state.tasks.find(t => t.id === task.id) === undefined) {
-      //     newTasks.push(task)
-      //   }
-      // }
       state.tasks = action.payload
     },
   }

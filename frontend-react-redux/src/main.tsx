@@ -5,12 +5,11 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { Provider, useSelector } from 'react-redux'
-import { RootState, store } from './store/store.ts'
+import { Provider } from 'react-redux'
+import { store } from './store/store.ts'
 
-import './index.css'
 
-import { Login } from './login/login.tsx'
+import { LoginPage } from './login/login-page/login-page.tsx'
 import { FeedPage } from './feed/feed-page/feed-page.tsx';
 
 import { ToastContainer } from 'react-toastify';
@@ -18,22 +17,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import persistStore from 'redux-persist/es/persistStore';
 
-type PropsGuardRoute = {
-  component: JSX.Element
-}
+import './index.css'
+import { GuardRoute } from './guard-route.tsx';
 
-const GuardRoute = ({ component }: PropsGuardRoute) => {
-  const userAuthenticated = useSelector((state: RootState) => state.user)
-  if(!userAuthenticated.isAuth) {
-    return <Login />
-  }
-  return component
-}
 
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />
+    element: <LoginPage />
   },
   {
     path: "/",
@@ -41,7 +32,7 @@ const router = createBrowserRouter([
   }
 ])
 
-let persistor = persistStore(store);
+const persistor = persistStore(store);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>

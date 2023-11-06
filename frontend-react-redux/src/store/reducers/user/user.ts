@@ -8,19 +8,27 @@ type LoginState = {
 }
 
 type UserState = {
-  id: string
-  username: string
-  token: string
-  isAuth: boolean
+  user: {
+    id: string
+    username: string
+  },
+  auth: {
+    token: string
+    isAuth: boolean
+  }
   isRememberMe: boolean
 }
 
 const initialState: UserState = {
-  id: "",
-  username: "",
-  token: "",
-  isAuth: false,
-  isRememberMe: false
+  user: {
+    id: '',
+    username: '',
+  },
+  auth: {
+    token: '',
+    isAuth: false,
+  },
+  isRememberMe: false,
 }
 
 export const userSlice = createSlice({
@@ -28,14 +36,16 @@ export const userSlice = createSlice({
   initialState: {...initialState},
   reducers: {
     login: (state, action: PayloadAction<LoginState>) => {
-      state.id = action.payload.id
-      state.username = action.payload.username
-      state.token = action.payload.token
-      state.isAuth = true
+      state.user.id = action.payload.id
+      state.user.username = action.payload.username
+      state.auth.token = action.payload.token
+      state.auth.isAuth = true
       state.isRememberMe = action.payload.isRememberMe
     },
     logout: state => {
-      state = {...initialState}
+      state.user = {...initialState.user}
+      state.auth = {...initialState.auth}
+      state.isRememberMe = initialState.isRememberMe
     },
   }
 })
