@@ -5,10 +5,11 @@ import { toast } from "react-toastify"
 
 import { TaskItem } from "../task-item/task-item"
 
-import { addTasks } from "../../store/reducers/task/task"
+import { setTasks } from "../../store/reducers/task/task"
 import { RootState } from "../../store/store"
 
-import { getAllTasksByUser } from "../service"
+import { getAllTasksByUser } from "../services/get-all-tasks-by-user"
+import { Container } from "./material-components"
 
 export const TaskList = () => {
   const userState = useSelector((state: RootState) => state.user)
@@ -21,7 +22,7 @@ export const TaskList = () => {
     if(data instanceof Error) {
       showMessageFromService(data)
     } else {
-      dispatch(addTasks(data))
+      dispatch(setTasks(data))
     }
   }, [dispatch, userState.auth.token, userState.user.id])
 
@@ -38,7 +39,7 @@ export const TaskList = () => {
   }
 
   return (
-    <ul>
+    <Container>
       {
         taskState.tasks.map((task, index) => (
           <li key={index}>
@@ -46,6 +47,6 @@ export const TaskList = () => {
           </li>
         ))
       }
-    </ul>
+    </Container>
   )
 }

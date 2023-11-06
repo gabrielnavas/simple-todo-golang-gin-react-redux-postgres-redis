@@ -5,6 +5,21 @@ export type TaskResponse = {
   updatedAt: string
 }
 
+type UserFromBody = {
+  id: string,
+  email: string
+  createdAt: string
+  updatedAt: string
+}
+
+type GetAllTasksByUserBody = {
+  id: string,
+  description: string
+  createdAt: string
+  updatedAt: string
+  owner: UserFromBody
+}
+
 export const getAllTasksByUser = async (userId: string, bearerToken: string): Promise<TaskResponse[] | Error> => {
   const response = await fetch(`http://localhost:8080/api/tasks?userId=${userId}`, {
     method: 'GET',
@@ -20,11 +35,11 @@ export const getAllTasksByUser = async (userId: string, bearerToken: string): Pr
   if (response.status === 200) {
     const data =  await response.json()
     const tasks: TaskResponse[] = data.tasks
-      .map((task: any) => ({
+      .map((task: GetAllTasksByUserBody) => ({
         id: task.id,
         description: task.description,
         createdAt: task.createdAt,
-        updatedAt: task.createdAt,
+        updatedAt: task.updatedAt,
       } as TaskResponse))
     return tasks
   }
