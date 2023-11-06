@@ -35,7 +35,7 @@ Accept: : application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTkzMjA1NzMsInN1YiI6IjViMTc5YzU3LTJiOGEtNGMxNC04NGE3LWI4YTQ5MTZiMTBkNSJ9.7t8GGH2rdugpY01nBum_mO6sbc6zNJ2kljtrrwMUCiE
 
 {
-  "description": "Testing the task #1",
+  "description": "Testing the task #3",
   "ownerId": "5b179c57-2b8a-4c14-84a7-b8a4916b10d5"
 }
 

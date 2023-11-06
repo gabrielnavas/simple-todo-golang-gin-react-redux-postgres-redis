@@ -51,15 +51,6 @@ func (ts *TaskService) CreateTask(data *models.TaskRequest) (*models.TaskRespons
 		return nil, err
 	}
 
-	taskByDescription, err := ts.taskRepository.GetTaskByDescription(task.Description)
-	if err != nil {
-		ts.loggerService.Log(fmt.Sprintf("error on find task by description: %s", task.Description))
-		return nil, errors.New("error on create task")
-	}
-	if taskByDescription != nil {
-		return nil, errors.New("already exists task with description")
-	}
-
 	err = ts.taskRepository.InsertTask(task)
 	if err != nil {
 		ts.loggerService.Log(fmt.Sprintf("error on insert on postgres task: %v", task))
@@ -80,15 +71,6 @@ func (ts *TaskService) UpdateTask(id string, data *models.TaskPartialsUpdateRequ
 	}
 	if task.DeletedAt != nil {
 		return errors.New("task already deleted")
-	}
-
-	taskByDescription, err := ts.taskRepository.GetTaskByDescription(task.Description)
-	if err != nil {
-		ts.loggerService.Log(fmt.Sprintf("error on find task by description: %s", task.Description))
-		return errors.New("error on create task")
-	}
-	if taskByDescription != nil && taskByDescription.Id != id {
-		return errors.New("already exists task with description")
 	}
 
 	task.Description = data.Description

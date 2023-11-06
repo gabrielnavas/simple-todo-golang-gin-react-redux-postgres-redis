@@ -95,32 +95,6 @@ func (trp *TaskRepositoryPostgres) GetTaskByID(id string) (*models.Task, error) 
 	return &task, nil
 }
 
-func (trp *TaskRepositoryPostgres) GetTaskByDescription(description string) (*models.Task, error) {
-	query := `
-		SELECT id, description, id_users, created_at, updated_at, deleted_at 
-		FROM tasks 
-		WHERE description = $1
-	`
-	var task models.Task
-	var userId string
-	err := trp.db.QueryRow(query, description).
-		Scan(&task.Id, &task.Description, &userId, &task.CreatedAt, &task.UpdatedAt, &task.DeletedAt)
-	if err != nil && err != sql.ErrNoRows {
-		return nil, err
-	} else if err == sql.ErrNoRows {
-		return nil, nil
-	}
-
-	// find user
-	user, err := trp.userRepository.GetUserByID(userId)
-	if err != nil {
-		return nil, err
-	}
-	task.Owner = *user
-
-	return &task, nil
-}
-
 func (trp *TaskRepositoryPostgres) DeleteTask(id string) error {
 	updateTodoSQL := `
 		UPDATE tasks
