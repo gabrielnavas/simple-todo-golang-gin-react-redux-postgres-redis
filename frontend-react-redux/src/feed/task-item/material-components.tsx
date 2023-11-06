@@ -1,9 +1,6 @@
 import { Card, styled } from "@mui/material"
 
-import { IconButton } from "@mui/material"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-export const ThreeDotsMenu = IconButton
 
 export const ThreeDotsMenuIcon = MoreVertIcon
 
