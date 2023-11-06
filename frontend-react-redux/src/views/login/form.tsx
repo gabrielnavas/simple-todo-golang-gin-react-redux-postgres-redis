@@ -13,15 +13,18 @@ import { validationSchema } from './validation-schema';
 import { FormControlLabel } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/reducers/user/user';
-import { serviceLogin } from './service';
+import { LoginResponse, serviceLogin } from './service';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export const Form = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: {
-      email: 'foobar@example.com',
-      password: 'foobar',
+      email: '',
+      password: '',
       rememberMe: false,
     },
     validationSchema: validationSchema,
@@ -30,17 +33,34 @@ export const Form = () => {
         email: values.email,
         password: values.password,
       })
-      .then(user => {
+      .then(data => {
         setSubmitting(false)
-        dispatch(login({
-          id: user.id,
-          username: user.email,
-          token: user.token,
-          isRememberMe: values.rememberMe
-        }))
+        if(data instanceof Error) {
+          showMessageFromLogin(data)
+        } else {
+          addDataOnStore(data)
+          redirectToFeed()
+        }
       })
     },
   });
+
+  const showMessageFromLogin = (error: Error) => {
+    toast(error.message)
+  }
+
+  const addDataOnStore = (data: LoginResponse) => {
+    dispatch(login({
+      id: data.user.id,
+      username: data.user.email,
+      token: data.token,
+      isRememberMe: formik.values.rememberMe
+    }))
+  }
+
+  const redirectToFeed = () => {
+    navigate('/')
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>

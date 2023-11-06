@@ -10,7 +10,6 @@ import { RootState, store } from './store/store.ts'
 
 import './index.css'
 
-import { Counter } from './views/counter/counter.tsx'
 import { Login } from './views/login/login.tsx'
 import { FeedPage } from './views/feed/feed.tsx';
 
@@ -32,10 +31,6 @@ const GuardRoute = ({ component }: PropsGuardRoute) => {
 }
 
 const router = createBrowserRouter([
-  {
-    path: "/counter",
-    element: <Counter />,
-  },
   {
     path: "/login",
     element: <Login />

@@ -1,9 +1,25 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { persistedReducer } from './persist';
+import { 
+  persistedReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from './persist';
+
+
 
 export const store = configureStore({
   reducer: persistedReducer,
   devTools: process.env.NODE_ENV !== 'production',
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
