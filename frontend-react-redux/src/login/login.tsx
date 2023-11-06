@@ -9,7 +9,7 @@ import {
 import { Form } from './form'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
+import { RootState } from '../store/store'
 import { useNavigate } from 'react-router-dom'
 
 export const Login = () => {

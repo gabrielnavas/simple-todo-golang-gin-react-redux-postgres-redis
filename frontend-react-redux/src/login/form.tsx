@@ -12,7 +12,7 @@ import { useFormik } from "formik";
 import { validationSchema } from './validation-schema';
 import { FormControlLabel } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { login } from '../../store/reducers/user/user';
+import { login } from '../store/reducers/user/user';
 import { LoginResponse, serviceLogin } from './service';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
