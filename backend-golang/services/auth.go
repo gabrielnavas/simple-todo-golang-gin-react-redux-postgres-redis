@@ -36,35 +36,43 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (as *AuthenticationService) Login(data LoginRequest) (string, error) {
+type LoginResponse struct {
+	User  *models.UserResponse `json:"user"`
+	Token string               `json:"token"`
+}
+
+func (as *AuthenticationService) Login(data LoginRequest) (*LoginResponse, error) {
 	var user *models.User = nil
 
 	user, err := as.userRepositoryRedis.GetUserByEmail(data.Email)
 	if err != nil {
 		as.logger.Log(fmt.Sprintf("problem on get user by email: %v - error => %s", data.Email, err))
-		return "", errors.New("problem on get user by email")
+		return nil, errors.New("problem on get user by email")
 	}
 	if user == nil {
 		user, err = as.userRepositoryPostgres.GetUserByEmail(data.Email)
 		if err != nil {
 			as.logger.Log(fmt.Sprintf("problem on get user by email: %v - error => %s", data.Email, err))
-			return "", errors.New("problem on get user by email")
+			return nil, errors.New("problem on get user by email")
 		}
 		if user == nil {
 			as.logger.Log("user not found on login")
-			return "", errors.New("email/password is not equals")
+			return nil, errors.New("email/password is not equals")
 		}
 	}
 
 	if !as.encryptPassword.VerifyPassword(user.Password, data.Password) {
-		return "", errors.New("email/password is not equals")
+		return nil, errors.New("email/password is not equals")
 	}
 
 	tokenJWT, err := as.tokenJWT.GenerateToken(user)
 	if err != nil {
 		as.logger.Log(fmt.Sprintf("problem on generate token by user: %v - error => %s", user.Id, err))
-		return "", errors.New("problem on generate token")
+		return nil, errors.New("problem on generate token")
 	}
 
-	return tokenJWT, nil
+	return &LoginResponse{
+		User:  user.ToResponse(),
+		Token: tokenJWT,
+	}, nil
 }
