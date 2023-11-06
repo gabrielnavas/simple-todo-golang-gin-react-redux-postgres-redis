@@ -36,7 +36,7 @@ export const Form = () => {
       .then(data => {
         setSubmitting(false)
         if(data instanceof Error) {
-          showMessageFromLogin(data)
+          showMessageFromService(data)
         } else {
           addDataOnStore(data)
           redirectToFeed()
@@ -45,7 +45,7 @@ export const Form = () => {
     },
   });
 
-  const showMessageFromLogin = (error: Error) => {
+  const showMessageFromService = (error: Error) => {
     toast(error.message)
   }
 
