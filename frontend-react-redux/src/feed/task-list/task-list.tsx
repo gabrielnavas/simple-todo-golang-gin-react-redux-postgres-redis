@@ -3,15 +3,25 @@ import { useCallback, useEffect } from "react"
 
 import { toast } from "react-toastify"
 
+import { useNavigate } from "react-router-dom"
+
+import { 
+  ServerError, 
+  Unauthorized, 
+  getAllTasksByUser
+} from "../services/get-all-tasks-by-user"
+
+import { logout } from "../../store/reducers/user/user"
+
 import { TaskItem } from "../task-item/task-item"
 
-import { setTasks } from "../../store/reducers/task/task"
+import { setTasks, setLoadingData } from "../../store/reducers/task/task"
 import { RootState } from "../../store/store"
 
-import { ServerError, Unauthorized, getAllTasksByUser } from "../services/get-all-tasks-by-user"
+import { MessageAlert } from "./message-list"
+
 import { Container } from "./material-components"
-import { useNavigate } from "react-router-dom"
-import { logout } from "../../store/reducers/user/user"
+
 
 export const TaskList = () => {
   const userState = useSelector((state: RootState) => state.user)
@@ -32,6 +42,7 @@ export const TaskList = () => {
   }, [navigate, dispatch, showMessageFromService])
 
   const fetchTasks =  useCallback(async () => {
+    dispatch(setLoadingData(true))
     const resp = await getAllTasksByUser(userState.user.id, userState.auth.token)
     if(resp.error) {
       if(resp.error instanceof Unauthorized) {
@@ -42,14 +53,19 @@ export const TaskList = () => {
     } else {
       dispatch(setTasks(resp.data))
     }
+    dispatch(setLoadingData(false))
   }, [dispatch, userState.auth.token, userState.user.id, unauthorizedFromService, showMessageFromService])
 
   useEffect(() => {
     fetchTasks()
   }, [fetchTasks])
 
+  if(taskState.loadingData)  {
+    return <MessageAlert message='Carregando tasks, aguarde!' type='warning' />
+  }
+
   if(taskState.tasks.length === 0)  {
-    return <span>Buscando tasks, aguarde!</span>
+    return <MessageAlert message='Nenhuma task encontrada!'   type='success' />
   }
 
   return (
