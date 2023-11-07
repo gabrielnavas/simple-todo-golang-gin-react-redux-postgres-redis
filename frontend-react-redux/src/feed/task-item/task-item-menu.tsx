@@ -19,6 +19,11 @@ export const TaskItemMenu = () => {
   return (
     <>
       <Button
+        style={{
+          display: 'flex',
+          justifyContent: 'center', 
+          alignItems: 'center',
+        }}
         id="demo-positioned-button"
         aria-controls={open ? 'demo-positioned-menu' : undefined}
         aria-haspopup="true"

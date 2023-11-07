@@ -25,12 +25,12 @@ export const TaskHeaderLeft = styled('div')({
   flexDirection: 'column',
   justifyContent: 'center',
   paddingLeft: '.5rem',
-  width: '90%',
+  width: '85%',
 })
 
 export const TaskHeaderRight = styled('div')({
   display: 'flex',
-  width: '10%',
+  width: '15%',
 })
 
 export const TaskContent = styled('div')({
