@@ -10,7 +10,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: 'background.paper',
+  bgcolor: 'white',
   boxShadow: 24,
   p: 4,
 };
@@ -38,7 +38,7 @@ export const CreateTaskModal = (props: Props) => {
       >
         <Fade in={props.isOpen}>
           <Box sx={style}>
-            <Form />
+            <Form closeModal={props.closeModal} />
           </Box>
         </Fade>
       </Modal>

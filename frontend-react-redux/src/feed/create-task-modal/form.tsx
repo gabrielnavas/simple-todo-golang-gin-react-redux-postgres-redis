@@ -17,8 +17,11 @@ import { RootState } from "../../store/store";
 import { toast } from "react-toastify";
 import { addTask } from "../../store/reducers/task/task";
 
+type Props = {
+  closeModal: () => void
+}
 
-export const Form = () => {
+export const Form = (props: Props) => {
   const userState = useSelector((state: RootState) => state.user)
 
   const dispatch = useDispatch()
@@ -36,6 +39,7 @@ export const Form = () => {
         setSubmitting(false)
         dispatch(addTask(data))
         formik.resetForm()
+        toast('Task adicionada!')
       }
     },
   });
@@ -68,7 +72,8 @@ export const Form = () => {
         Adicionar
       </ButtonAction>
         <ButtonAction 
-          variant="outlined">
+          variant="outlined"
+          onClick={props.closeModal}>
             Fechar
         </ButtonAction>
       </Buttons>
