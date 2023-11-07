@@ -10,10 +10,12 @@ type Task = {
 
 type TasksState = {
   tasks: Task[]
+  loadingData: boolean
 }
 
 const initialState: TasksState = {
-  tasks: []
+  tasks: [],
+  loadingData: false
 }
 
 export const taskSlice = createSlice({
@@ -27,9 +29,12 @@ export const taskSlice = createSlice({
       const tasks = state.tasks.map(t => t as Task).concat([action.payload])
       state.tasks = tasks
     },
+    setLoadingData: (state, action: PayloadAction<boolean>) => {
+      state.loadingData = action.payload
+    }
   }
 })
 
-export const { addTask, setTasks } = taskSlice.actions
+export const { addTask, setTasks, setLoadingData } = taskSlice.actions
 
 export default taskSlice.reducer
