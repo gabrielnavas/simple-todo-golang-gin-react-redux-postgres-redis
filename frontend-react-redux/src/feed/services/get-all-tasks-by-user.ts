@@ -1,4 +1,4 @@
-export type TaskResponse = {
+type TaskResponse = {
   id: string
   description: string
   createdAt: string
@@ -20,7 +20,24 @@ type GetAllTasksByUserBody = {
   owner: UserFromBody
 }
 
-export const getAllTasksByUser = async (userId: string, bearerToken: string): Promise<TaskResponse[] | Error> => {
+export class Unauthorized extends Error {
+  constructor(message: string ) {
+     super(message)
+  }
+}
+
+export class ServerError extends Error {
+  constructor(message: string ) {
+     super(message)
+  }
+}
+
+type Response = {
+  error: Unauthorized | ServerError | null
+  data: TaskResponse[]
+} 
+
+export const getAllTasksByUser = async (userId: string, bearerToken: string): Promise<Response> => {
   const response = await fetch(`http://localhost:8080/api/tasks?userId=${userId}`, {
     method: 'GET',
     headers: {
@@ -29,8 +46,8 @@ export const getAllTasksByUser = async (userId: string, bearerToken: string): Pr
       'Authorization': `Bearer ${bearerToken}`
     }
   })
-  if (response.status >= 401 || response.status >= 403) {
-    return new Error("Sem autorização")
+  if (response.status === 401 || response.status === 403) {
+    return { error: new Unauthorized("Sem autorização"), data: []}
   }
   if (response.status === 200) {
     const data =  await response.json()
@@ -41,7 +58,7 @@ export const getAllTasksByUser = async (userId: string, bearerToken: string): Pr
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
       } as TaskResponse))
-    return tasks
+    return { data: tasks, error: null}
   }
-  return new Error("Problemas no servidor. Tente novamente mais tarde.")
+  return { error: new ServerError("Problemas no servidor. Tente novamente mais tarde."), data: [] }
 }
