@@ -10,7 +10,7 @@ export const Task = styled(Card)({
   justifyContent: 'center',
   minHeight: "100px",
   width: "400px",
-  background: 'lightgray',
+  background: '#EEEF',
   padding: '.5rem',
   marginBottom: '1rem'
 });
