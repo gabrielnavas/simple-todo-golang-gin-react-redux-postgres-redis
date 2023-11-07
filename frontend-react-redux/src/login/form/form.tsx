@@ -66,6 +66,10 @@ export const Form = () => {
     navigate('/')
   }
 
+  const redirectToRegister = () => {
+    navigate('/register')
+  }
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Inputs>
@@ -107,7 +111,7 @@ export const Form = () => {
       </ActionsAfterButtons>
       <Buttons>
         <ButtonAction type="submit" variant="contained" disabled={formik.isSubmitting}>Entrar</ButtonAction>
-        <ButtonAction variant="outlined">Fazer cadastro</ButtonAction>
+        <ButtonAction variant="outlined" onClick={redirectToRegister}>Fazer cadastro</ButtonAction>
       </Buttons>
     </form>
   )
