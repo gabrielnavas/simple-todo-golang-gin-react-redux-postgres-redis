@@ -44,11 +44,22 @@ func (ac *AuthenticationController) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	user, err := ac.userService.CreateUser(&data)
+	// create user
+	_, err := ac.userService.CreateUser(&data)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"details": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"user": user})
+	// make login
+	loginRequest := services.LoginRequest{
+		Email:    data.Email,
+		Password: data.Password,
+	}
+	loginResponse, err := ac.authenticationService.Login(loginRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"details": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, loginResponse)
 }
