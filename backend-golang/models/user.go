@@ -47,7 +47,7 @@ func (u *User) Validate() error {
 type UserRequest struct {
 	Email                string `json:"email" binding:"required"`
 	Password             string `json:"password" binding:"required"`
-	PasswordConfirmation string `json:"password_confirmation" binding:"required"`
+	PasswordConfirmation string `json:"passwordConfirmation" binding:"required"`
 }
 
 type UserResponse struct {

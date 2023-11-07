@@ -61,5 +61,5 @@ func (ac *AuthenticationController) RegisterUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"details": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, loginResponse)
+	c.JSON(http.StatusCreated, loginResponse)
 }
