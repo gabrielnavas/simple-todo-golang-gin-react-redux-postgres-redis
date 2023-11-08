@@ -27,6 +27,10 @@ export const LoginPage = () => {
   }, [userAuthenticated.auth.isAuth, navigate])
 
   useEffect(() => {
+    document.title = 'Se logar'
+  }, []);
+
+  useEffect(() => {
     verifyIsUserAlreadyAuth()
   }, [verifyIsUserAlreadyAuth])
 
