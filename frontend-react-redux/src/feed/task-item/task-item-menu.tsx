@@ -6,6 +6,9 @@ import {
 
 import { Button, Menu, MenuItem } from '@mui/material'
 
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 export const TaskItemMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -46,8 +49,14 @@ export const TaskItemMenu = () => {
           horizontal: 'left',
         }}
       >
-        <MenuItem onClick={handleClose}><Button size="small" color="warning">Atualizar</Button></MenuItem>
-        <MenuItem onClick={handleClose}><Button size="small" color="error">Remover</Button></MenuItem>
+        <MenuItem onClick={handleClose}><Button size="small" color="warning">
+          <SyncAltIcon style={{ marginRight: '.5rem' }} />
+          Atualizar
+        </Button></MenuItem>
+        <MenuItem onClick={handleClose}><Button size="small" color="error">
+          <DeleteForeverIcon style={{ marginRight: '.5rem' }} />
+          Remover
+        </Button></MenuItem>
       </Menu>
     </>
   )
