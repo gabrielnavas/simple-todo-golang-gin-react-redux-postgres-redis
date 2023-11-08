@@ -1,8 +1,8 @@
 import { useState } from "react"
+import { CreateTaskModal } from "../create-task-modal/create-task-modal"
 
 import { useSelector } from "react-redux"
 
-import { CreateTaskModal } from "../create-task-modal/create-task-modal"
 import { 
   Container, 
   CreateTaskButton, 
