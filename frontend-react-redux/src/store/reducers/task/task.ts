@@ -26,8 +26,7 @@ export const taskSlice = createSlice({
       state.tasks = action.payload
     },
     addTask: (state, action: PayloadAction<Task>) => {
-      const tasks = state.tasks.map(t => t as Task).concat([action.payload])
-      state.tasks = tasks
+      state.tasks = [action.payload].concat(state.tasks)
     },
     setLoadingData: (state, action: PayloadAction<boolean>) => {
       state.loadingData = action.payload
