@@ -51,6 +51,7 @@ export const Form = (props: Props) => {
       </Title>
       <Inputs>
         <Input 
+          inputRef={input => input && input.focus()}
           rows={8}
           multiline
           label="Descrição" 
