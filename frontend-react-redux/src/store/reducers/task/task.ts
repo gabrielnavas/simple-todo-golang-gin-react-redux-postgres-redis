@@ -28,12 +28,20 @@ export const taskSlice = createSlice({
     addTask: (state, action: PayloadAction<Task>) => {
       state.tasks = [action.payload].concat(state.tasks)
     },
+    updatePartialsTask: (state, action: PayloadAction<Task>) => {
+      state.tasks = state.tasks.map(task => {
+        if(task.id === action.payload.id) {
+          return action.payload
+        }
+        return task
+      })
+    },
     setLoadingData: (state, action: PayloadAction<boolean>) => {
       state.loadingData = action.payload
     }
   }
 })
 
-export const { addTask, setTasks, setLoadingData } = taskSlice.actions
+export const { addTask, setTasks, updatePartialsTask, setLoadingData } = taskSlice.actions
 
 export default taskSlice.reducer

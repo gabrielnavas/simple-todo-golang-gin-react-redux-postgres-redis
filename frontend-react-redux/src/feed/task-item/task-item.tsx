@@ -10,6 +10,8 @@ import {
 } from './material-components'
 
 import { TaskItemMenu } from './task-item-menu'
+import { UpdateTaskModal } from '../update-task-modal /update-task-modal'
+import { useState } from 'react'
 
 type Task = {
   id: string
@@ -23,6 +25,7 @@ type Props = {
 }
 
 export const TaskItem = ({ taskData }: Props) => {
+  const [modalIsOpen, setModalIsOpen] = useState(false)
 
   const showUpdatedAt = taskData.createdAt.toISOString() !== taskData.updatedAt.toISOString() 
   && (
@@ -41,12 +44,19 @@ export const TaskItem = ({ taskData }: Props) => {
           { showUpdatedAt }
         </TaskHeaderLeft>
         <TaskHeaderRight>
-          <TaskItemMenu />
+          <TaskItemMenu
+            onClickUpdateButton={() => setModalIsOpen(true)}
+          />
         </TaskHeaderRight>
       </TaskHeader>
       <TaskContent>
         {taskData.description} 
       </TaskContent>
+
+      <UpdateTaskModal 
+        isOpen={modalIsOpen}
+        closeModal={() => setModalIsOpen(false)}
+        taskToUpdate={taskData} />
     </Task>
   )
 }

@@ -9,7 +9,11 @@ import { Button, Menu, MenuItem } from '@mui/material'
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-export const TaskItemMenu = () => {
+type Props = {
+  onClickUpdateButton: () => void
+}
+
+export const TaskItemMenu = (props: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,14 +53,18 @@ export const TaskItemMenu = () => {
           horizontal: 'left',
         }}
       >
-        <MenuItem onClick={handleClose}><Button size="small" color="warning">
+        <MenuItem onClick={handleClose}>
+          <Button size="small" color="warning" onClick={props.onClickUpdateButton}>
           <SyncAltIcon style={{ marginRight: '.5rem' }} />
           Atualizar
-        </Button></MenuItem>
-        <MenuItem onClick={handleClose}><Button size="small" color="error">
-          <DeleteForeverIcon style={{ marginRight: '.5rem' }} />
-          Remover
-        </Button></MenuItem>
+          </Button>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Button size="small" color="error">
+            <DeleteForeverIcon style={{ marginRight: '.5rem' }} />
+            Remover
+          </Button>
+        </MenuItem>
       </Menu>
     </>
   )
