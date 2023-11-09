@@ -2,6 +2,7 @@ import { styled }from "@mui/system"
 import { Button, TextField } from "@mui/material"
 
 import AddIcon from '@mui/icons-material/Add'
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -24,7 +25,8 @@ export const Input = styled(TextField)({
 
 export const ButtonAction = styled(Button)({
   marginBottom: '.6rem',
-  width: '100%'
+  width: '100%',
+  height: '100%'
 });
 
 export const Inputs =  styled('div')({
@@ -36,7 +38,13 @@ export const Buttons = styled('div')({
   width: '100%'
 });
 
-export const AddTaskIcon = styled(AddIcon)({})
+export const AddTaskIcon = styled(AddIcon)({
+  marginRight: '.3rem'
+})
+
+export const CancelRemoveTaskIcon = styled(CancelIcon)({
+  marginRight: '.3rem'
+})
 
 export const Title = styled('span')({
   fontWeight: '500',

@@ -8,6 +8,7 @@ import {
   Input,
   Inputs,
   Title,
+  CancelRemoveTaskIcon,
 } from './material-components'
 
 import { validationSchema } from './validation-schema';
@@ -75,6 +76,7 @@ export const Form = (props: Props) => {
         <ButtonAction 
           variant="outlined"
           onClick={props.closeModal}>
+            <CancelRemoveTaskIcon />
             Fechar
         </ButtonAction>
       </Buttons>
