@@ -41,6 +41,8 @@ export const Form = () => {
         } else {
           addDataOnStore(data)
           redirectToFeed()
+          toast('Registrado com sucesso!')
+          toast('Você já pode criar suas tasks!')
         }
       })
     },

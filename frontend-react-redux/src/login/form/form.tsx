@@ -44,6 +44,7 @@ export const Form = () => {
         } else {
           addDataOnStore(data)
           redirectToFeed()
+          toast('Logado com sucesso!')
         }
       })
     },
