@@ -36,12 +36,15 @@ export const taskSlice = createSlice({
         return task
       })
     },
+    removeTaskById: (state, action: PayloadAction<{ taskId: string}>) => {
+      state.tasks = state.tasks.filter(task => task.id !== action.payload.taskId)
+    },
     setLoadingData: (state, action: PayloadAction<boolean>) => {
       state.loadingData = action.payload
     }
   }
 })
 
-export const { addTask, setTasks, updatePartialsTask, setLoadingData } = taskSlice.actions
+export const { addTask, setTasks, updatePartialsTask, removeTaskById, setLoadingData } = taskSlice.actions
 
 export default taskSlice.reducer

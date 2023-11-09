@@ -10,7 +10,8 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 type Props = {
-  onClickUpdateButton: () => void
+  onClickOpenModalUpdateTask: () => void
+  onClickOpenModalRemoveTask: () => void
 }
 
 export const TaskItemMenu = (props: Props) => {
@@ -54,13 +55,13 @@ export const TaskItemMenu = (props: Props) => {
         }}
       >
         <MenuItem onClick={handleClose}>
-          <Button size="small" color="warning" onClick={props.onClickUpdateButton}>
+          <Button size="small" color="warning" onClick={props.onClickOpenModalUpdateTask}>
           <SyncAltIcon style={{ marginRight: '.5rem' }} />
           Atualizar
           </Button>
         </MenuItem>
         <MenuItem onClick={handleClose}>
-          <Button size="small" color="error">
+          <Button size="small" color="error" onClick={props.onClickOpenModalRemoveTask}>
             <DeleteForeverIcon style={{ marginRight: '.5rem' }} />
             Remover
           </Button>

@@ -2,7 +2,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import { Form } from './form';
+import { QuestionToRemoveTask } from './question-to-remove-task';
 import { TaskUpdate } from './task-update-data';
 
 const style = {
@@ -22,7 +22,7 @@ type Props = {
   taskToUpdate: TaskUpdate
 }
 
-export const UpdateTaskModal = (props: Props) => {
+export const RemoveTaskModal = (props: Props) => {
   return (
     <div>
       <Modal
@@ -40,7 +40,7 @@ export const UpdateTaskModal = (props: Props) => {
       >
         <Fade in={props.isOpen}>
           <Box sx={style}>
-            <Form closeModal={props.closeModal} taskToUpdate={props.taskToUpdate} />
+            <QuestionToRemoveTask closeModal={props.closeModal} taskToUpdate={props.taskToUpdate} />
           </Box>
         </Fade>
       </Modal>

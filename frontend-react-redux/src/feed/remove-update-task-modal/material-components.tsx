@@ -1,7 +1,8 @@
 import { styled }from "@mui/system"
-import { Button, TextField } from "@mui/material"
+import { Button } from "@mui/material"
 
-import UpdateIcon from '@mui/icons-material/Update'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -9,7 +10,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 
-export const Container = styled('form')({
+export const Container = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -17,18 +18,9 @@ export const Container = styled('form')({
 });
 
 
-export const Input = styled(TextField)({
-  marginBottom: '1rem',
-  width: '100%'
-});
-
 export const ButtonAction = styled(Button)({
   marginBottom: '.6rem',
-  width: '100%'
-});
-
-export const Inputs =  styled('div')({
-  width: '100%'
+  width: '100%',
 });
 
 export const Buttons = styled('div')({
@@ -36,7 +28,13 @@ export const Buttons = styled('div')({
   width: '100%'
 });
 
-export const UpdateTaskIcon = styled(UpdateIcon)({})
+export const RemoveTaskIcon = styled(DeleteForeverIcon)({
+  marginRight: '.3rem'
+})
+
+export const CancelRemoveTaskIcon = styled(CancelIcon)({
+  marginRight: '.3rem'
+})
 
 export const Title = styled('span')({
   fontWeight: '500',
@@ -47,12 +45,23 @@ export const Title = styled('span')({
 export const Subtitle = styled('span')({
   display: 'flex',
   flexDirection: 'column',
+  width: '100%',
   padding: '.5rem'
 })
 
 export const SubtitleItem = styled('span')({
+  display: 'flex',
+  flexDirection: 'column',
   fontWeight: 200,
   color: '#555',
   fontSize: '.76rem',
+  margin: '.15rem 0 .15rem 0'
+})
+
+
+export const QuestionToRemoveTaskText = styled('div')({
+  fontWeight: '600',
+  color: 'red',
+  fontSize: '1rem',
   margin: '.15rem 0 .15rem 0'
 })

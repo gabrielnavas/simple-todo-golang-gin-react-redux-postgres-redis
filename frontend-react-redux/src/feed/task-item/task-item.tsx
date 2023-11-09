@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import moment from 'moment'
 
 import { 
@@ -10,8 +12,8 @@ import {
 } from './material-components'
 
 import { TaskItemMenu } from './task-item-menu'
-import { UpdateTaskModal } from '../update-task-modal /update-task-modal'
-import { useState } from 'react'
+import { UpdateTaskModal } from '../update-task-modal/update-task-modal'
+import { RemoveTaskModal } from '../remove-update-task-modal/remove-task-modal'
 
 type Task = {
   id: string
@@ -25,7 +27,8 @@ type Props = {
 }
 
 export const TaskItem = ({ taskData }: Props) => {
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalUpdateIsOpen, setModalUpdateIsOpen] = useState(false)
+  const [modalRemoveIsOpen, setModalRemoveIsOpen] = useState(false)
 
   const showUpdatedAt = taskData.createdAt.toISOString() !== taskData.updatedAt.toISOString() 
   && (
@@ -44,18 +47,24 @@ export const TaskItem = ({ taskData }: Props) => {
           { showUpdatedAt }
         </TaskHeaderLeft>
         <TaskHeaderRight>
-          <TaskItemMenu
-            onClickUpdateButton={() => setModalIsOpen(true)}
-          />
+          <TaskItemMenu 
+            onClickOpenModalUpdateTask={() => setModalUpdateIsOpen(true)} 
+            onClickOpenModalRemoveTask={() => setModalRemoveIsOpen(true)} />
         </TaskHeaderRight>
       </TaskHeader>
       <TaskContent>
         {taskData.description} 
       </TaskContent>
 
+
+      <RemoveTaskModal 
+        isOpen={modalRemoveIsOpen}
+        closeModal={() => setModalRemoveIsOpen(false)}
+        taskToUpdate={taskData} />
+
       <UpdateTaskModal 
-        isOpen={modalIsOpen}
-        closeModal={() => setModalIsOpen(false)}
+        isOpen={modalUpdateIsOpen}
+        closeModal={() => setModalUpdateIsOpen(false)}
         taskToUpdate={taskData} />
     </Task>
   )
